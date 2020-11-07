@@ -53,9 +53,15 @@ class Attributes {
 
     function addClass($class) {
         $class = $this->classFilter($class);
-        if(!$this->classExists($class))
+        if (!$this->classExists($class))
             $this->classes[] = $class;
         return $this;
+    }
+
+    protected function classFilter($class) {
+        $class = strtolower($class);
+        $class = preg_replace('/\s+/', ' ', $class);
+        return $class;
     }
 
     function classExists($class): bool {
@@ -64,17 +70,11 @@ class Attributes {
 
     function removeClass($class) {
         $class = $this->classFilter($class);
-        if($this->classExists($class)){
+        if ($this->classExists($class)) {
             $key = array_search($class, $this->classes);
-            unset( $this->classes[$key]);
+            unset($this->classes[$key]);
         }
         return $this;
-    }
-
-    protected function classFilter($class){
-        $class = strtolower($class);
-        $class = preg_replace('/\s+/', ' ', $class);
-        return $class;
     }
 
     function __toString() {
@@ -82,11 +82,19 @@ class Attributes {
         foreach ($this->toArray() as $key => $value) {
             $attributes .= " {$key}=\"{$value}\"";
         }
-        $attributes .= " class=\"";
-        foreach ($this->classes as $value) {
-            $attributes .= "{$value} ";
-        }
-        $attributes = substr($attributes,0,-1);
+        $attributes .= $this->toStringClasses();
+
         return $attributes;
+    }
+
+    protected function toStringClasses() {
+        if (empty($this->classes))
+            return "";
+
+        $classes = " class=\"";
+        foreach ($this->classes as $value) {
+            $classes .= "{$value} ";
+        }
+        return substr_replace($classes, "\"", -1);
     }
 }

@@ -12,7 +12,13 @@ $div = Tag::div();
     ->href('//google.com')
     ->target('_blank')
     ->appendTo($div);
-echo $div->addClass('content');
+echo $div
+    ->addClass('content')
+    ->addClass('container')
+    ->addClass('test')
+    ->addClass('test2')
+    ->addClass('test2')
+    ->removeClass('test2');
 /*trait HasName
 {
     private $name;

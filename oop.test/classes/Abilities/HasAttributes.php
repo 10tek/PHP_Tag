@@ -30,21 +30,34 @@ trait HasAttributes
     }
 
     function addClass($class){
+        $this->attributes()->addClass($class);
+        return $this;
+    }
 
+    function removeClass($class){
+        $this->attributes()->removeClass($class);
+        return $this;
+    }
+
+    function classExists($class): bool {
+        return $this->attributes()->classExists($class);
     }
 
     function appendAttr(string $key, $value){
         $this->attributes()->append($key, $value);
         return $this;
     }
+
     function __call(string $name, array $arguments){
+        if($name == 'class')
+            return $this->addClass(... $arguments);
         return $this->setAttr($name, ... $arguments);
     }
 
-
-
     function __set($name, $value){
-        $this->setAttr($name, $value);
+        if($name == 'class')
+            return $this->addClass($value);
+        return $this->setAttr($name, $value);
     }
 
 }
